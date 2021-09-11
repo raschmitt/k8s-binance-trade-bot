@@ -21,6 +21,9 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "750m"
+            requests:
+              memory: "1Gi"
+              cpu: "375m"
           volumeMounts:
               - name: data
                 mountPath: /app/data
@@ -44,6 +47,9 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "250m"
+            requests:
+              memory: "500Mi"
+              cpu: "125m"
           volumeMounts:
             - name: data
               mountPath: /app/data
