@@ -26,7 +26,7 @@ steps:
     displayName: 'Apply manifests'
     inputs:
       action: 'deploy'
-      kubernetesServiceConnection: 'Okteto'
+      kubernetesServiceConnection: 'okteto-binance-bot'
       namespace: 'binance-trade-bot-raschmitt'
       manifests: 'k8s/*.yml'
 
