@@ -1,5 +1,19 @@
 trigger:
-- none
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - k8s
+    - build.yml
+
+schedules:
+- cron: "0 */12 * * * "
+  displayName: Build every 12 hours
+  branches:
+    include:
+    - master
+  always: true
 
 pool:
   vmImage: ubuntu-latest
