@@ -12,7 +12,7 @@ schedules:
   displayName: Build every 12 hours
   branches:
     include:
-    - master
+    - main
   always: true
 
 pool:
