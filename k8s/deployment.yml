@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  selector:
+    matchLabels:
+      app: binance-trader-bot
+  template:
+    metadata:
+      labels:
+        app: binance-trader-bot
+    spec:
+      containers:
+        - name: bot
+          image: edeng23/binance-trade-bot
+          workingDir: /app
+          command: ["python"]
+          args: ["-m", "binance_trade_bot"]
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "750m"
+          volumeMounts:
+              - name: data
+                mountPath: /app/data
+              - name: logs
+                mountPath: /app/logs
+              - name: user-cfg
+                mountPath: /app/user.cfg
+                subPath: user.cfg
+              - name: supported-coin-list
+                mountPath: /app/supported_coin_list
+                subPath: supported_coin_list
+              - name: apprise
+                mountPath: /app/config/apprise.yml
+                subPath: apprise.yml
+        - name: api
+          image: edeng23/binance-trade-bot
+          workingDir: /app
+          command: ["gunicorn"]
+          args: ["binance_trade_bot.api_server:app", "-k", "eventlet", "-w", "1", "--threads", "1", "-b", "0.0.0.0:5123"]
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "250m"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: logs
+              mountPath: /app/logs
+            - name: user-cfg
+              mountPath: /app/user.cfg
+              subPath: user.cfg
+          ports:
+          - containerPort: 5123
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc
+        - name: logs
+          persistentVolumeClaim:
+            claimName: logs-pvc
+        - name: user-cfg
+          secret:
+            secretName: user-cfg-secret
+        - name: supported-coin-list
+          secret:
+            secretName: supported-coin-list-secret
+        - name: apprise
+          secret:
+            secretName: apprise-secret

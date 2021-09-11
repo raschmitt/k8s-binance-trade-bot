@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  selector:
+    app: binance-trader-bot
+  ports:
+  - port: 80
+    targetPort: 5123
+    protocol: TCP
+  type: ClusterIP
+  
